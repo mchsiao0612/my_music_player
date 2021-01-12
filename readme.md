@@ -11,3 +11,9 @@ The files are organized in folders as following:
 - The credential (client_secret.json) should be downloaded from [Google Cloud Platform](http://console.cloud.google.com/), and placed in the folder "credentials".
 - The token file (token.pickle) will be created automatically when the Google authentication flow completes for the first time.
 - The folders "tokens" and "downloads" will be created automatically if not existed, but the folders "credentials" should be created manually.
+
+## Usage
+```
+cd scripts
+python3 main.py
+```
