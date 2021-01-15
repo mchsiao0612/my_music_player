@@ -1,5 +1,5 @@
 ## Introduction
-This is a command-line music player accessing the music stored in google drive through google drive API. The interactive user interface is implemented with python [simple-term-menu](https://pypi.org/project/simple-term-menu/), which only support Linux and macOS.
+This is a command-line music player accessing the music stored in google drive through google drive API. The interactive user interface is implemented with python [simple-term-menu](https://pypi.org/project/simple-term-menu/), which only supports Linux and macOS.
 
 ## Organization of Folders
 The files are organized in folders as following:
