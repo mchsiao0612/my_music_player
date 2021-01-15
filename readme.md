@@ -8,6 +8,11 @@ The files are organized in folders as following:
 - **tokens**: containing the token file named "token.pickle".
 - **downloads**: containing the downloaded files during execution.
 
+## Required Packages
+```
+> pip3 install -r requirements.txt
+```
+
 ## Usage
 1. Download the credential file from [Google Cloud Platform](https://console.cloud.google.com/).
 2. Rename the credential file as **"client_secret.json"**, and put it in the **"credentials"** folder.
