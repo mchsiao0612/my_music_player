@@ -43,6 +43,7 @@ class Music_Player:
 
         # Initialize the vlc music player.
         self.vlc_player = vlc.MediaPlayer()
+        self.vlc_list_player = vlc.MediaListPlayer()
 
     # Function serving as the interface for user to use a music player.
     def start(self):
@@ -135,8 +136,8 @@ class Music_Player:
     def show_main_menu(self):
 
         # Set the entries and the title for the main menu.
-        menu_entries = ["play a song", "play a playlist", "quit"]
-        menu_title = "welcome to my-music-player:"
+        menu_entries = ["play a song", "play a playlist", "exit"]
+        menu_title = "main menu:"
 
         # Create the main menu.
         self.current_menu = TerminalMenu(menu_entries, title=menu_title)
@@ -149,6 +150,10 @@ class Music_Player:
             self.current_menu_name = "playlist_menu"
         elif self.selected_index == 2:
             self.is_application_quit = True
+            for f in os.listdir("../downloads"):
+                if f.endswith(".mp3"):
+                    os.system("rm ../downloads/*.mp3")
+                    break
             print("thanks for using my-music-player, see you again...")
 
     # Function for showing the playlist menu.
@@ -164,8 +169,8 @@ class Music_Player:
         
         # Set the entries and the title for the playlist menu.
         menu_entries = list(self.all_playlist.keys())
-        menu_entries.insert(0, "return to main menu")
-        menu_title = "here are all your playlists (select \"return to main menu\" to return): "
+        menu_entries.insert(0, "[return to main menu]")
+        menu_title = "playlist menu (select [return to main menu] to return): "
         
         # Create the playlist menu.
         self.current_menu = TerminalMenu(menu_entries, title=menu_title)
@@ -182,18 +187,24 @@ class Music_Player:
             self.all_music, self.all_playlist = {}, {}
             self.get_all_music(music_folder_id=playlist_id)
 
-            # Play each song sequentially.
+            # Create the playlist.
+            playlist = vlc.MediaList()
             for file_name in list(self.all_music.keys()):
 
                 # Download the music.
                 self.download_music(self.all_music[file_name], file_name)
             
-                # Play the music.
-                print("start playing ({})...\n".format(file_name))
-                if self.vlc_player.is_playing():
-                    self.vlc_player.stop()
-                self.vlc_player.set_media(vlc.Media("../downloads/" + file_name))
-                self.vlc_player.play()
+                # Add the music into playlist.
+                playlist.add_media(vlc.Media("../downloads/" + file_name))
+
+            # Play the playlist.
+            print("start playing a playlist ({})...\n".format(menu_entries[self.selected_index]))
+            if self.vlc_player.is_playing():
+                self.vlc_player.stop()
+            if self.vlc_list_player.is_playing():
+                self.vlc_list_player.stop()
+            self.vlc_list_player.set_media_list(playlist)
+            self.vlc_list_player.play()
 
     # Function for showing the music menu.
     def show_music_menu(self):
@@ -208,8 +219,8 @@ class Music_Player:
 
         # Set the entries and the title for the music menu.
         menu_entries = list(self.all_music.keys())
-        menu_entries.insert(0, "return to main menu")
-        menu_title = "here are all your songs (select \"return to main menu\" to return): "
+        menu_entries.insert(0, "[return to main menu]")
+        menu_title = "music menu (select [return to main menu] to return): "
        
         # Create the music menu.
         self.current_menu = TerminalMenu(menu_entries, title=menu_title)
@@ -225,9 +236,11 @@ class Music_Player:
             self.download_music(self.all_music[file_name], file_name)
 
             # Play the music.
-            print("start playing ({})...\n".format(file_name))
+            print("start playing a song ({})...\n".format(file_name))
             if self.vlc_player.is_playing():
                 self.vlc_player.stop()
+            if self.vlc_list_player.is_playing():
+                self.vlc_list_player.stop()
             self.vlc_player.set_media(vlc.Media("../downloads/" + file_name))
             self.vlc_player.play()
 
